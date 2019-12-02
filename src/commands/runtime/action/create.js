@@ -28,9 +28,9 @@ class ActionCreate extends RuntimeBaseCommand {
 
     try {
       // sanity check must either be a sequence or a file but permit neither in case of an update
-      if (args.actionPath && flags.sequence) {
+      if (args.actionPath && flags.sequence && flags.inline) {
         throw (new Error('Cannot specify sequence and a code artifact at the same time'))
-      } else if (!args.actionPath && !flags.sequence && !this.isUpdate()) {
+      } else if (!args.actionPath && !flags.sequence && !flags.inline && !this.isUpdate()) {
         throw (new Error('Must provide a code artifact or define a sequence'))
       }
 
@@ -42,8 +42,10 @@ class ActionCreate extends RuntimeBaseCommand {
       // a sequence is a system/internal function
       if (flags.kind && flags.sequence) {
         throw new Error('A kind may not be specified for a sequence')
-      } else if (flags.kind && !args.actionPath) {
-        throw new Error('A kind can only be specified when you provide a code artifact')
+      } else if (flags.kind && !args.actionPath && !flags.inline) {
+          throw new Error('A kind can only be specified when you provide a code artifact')
+      } else if (flags.inline && !flags.kind) {
+          throw new Error('A kind is required for inline code artifact')
       }
 
       if (args.actionPath) {
@@ -78,6 +80,11 @@ class ActionCreate extends RuntimeBaseCommand {
         } else {
           exec = createComponentsfromSequence(sequenceAction)
         }
+      } else if (flags.inline) {
+          exec = {
+              kind: flags.kind,
+              code: flags.inline
+          }
       }
 
       if (flags.param) {
@@ -162,6 +169,7 @@ class ActionCreate extends RuntimeBaseCommand {
 
       const ow = await this.wsk()
       const method = this.isUpdate() ? 'update' : 'create'
+
       const result = await ow.actions[method]({ name, action: options })
       if (flags.json) {
         this.logJSON('', result)
@@ -233,6 +241,9 @@ ActionCreate.flags = {
   }),
   sequence: flags.string({
     description: 'treat ACTION as comma separated sequence of actions to invoke' // help description for flag
+  }),
+  inline: flags.string({
+    description: 'function code as inline text' // help description for flag
   }),
   main: flags.string({
     description: 'the name of the action entry point (function or fully-qualified method name when applicable)'
