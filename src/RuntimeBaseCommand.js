@@ -18,7 +18,8 @@ const debug = createDebug('aio-cli-plugin-runtime')
 const http = require('http')
 const OpenWhisk = require('openwhisk')
 const config = require('@adobe/aio-lib-core-config')
-const { cli } = require('cli-ux')
+
+let cli
 
 class RuntimeBaseCommand extends Command {
   async getOptions () {
@@ -112,6 +113,9 @@ class RuntimeBaseCommand extends Command {
   }
 
   table (data, columns, options = {}) {
+    if (!cli) {
+      cli = require('cli-ux').cli
+    }
     cli.table(data, columns, options)
   }
 
