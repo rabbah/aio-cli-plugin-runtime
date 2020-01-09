@@ -22,7 +22,11 @@ class TriggerDelete extends RuntimeBaseCommand {
     try {
       const ow = await this.wsk()
       const obj = { namespace, name }
-      await ow.triggers.delete(obj)
+      const trigger = await ow.triggers.delete(obj)
+      const feedAnnotation = trigger.annotations && trigger.annotations.find(kv => kv.key === 'feed')
+      if (feedAnnotation) {
+        await ow.feeds.delete({ name: feedAnnotation.value, trigger: triggerPath })
+      }
     } catch (err) {
       this.handleError(`Unable to delete trigger '${triggerPath}'`, err)
     }

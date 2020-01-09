@@ -27,13 +27,17 @@ class TriggerCreate extends RuntimeBaseCommand {
       } else if (flags['param-file']) {
         triggerPackage = createKeyValueArrayFromFile(flags['param-file'])
       }
-      let annotationParams = {}
+      let annotationParams = []
       if (flags.annotation) {
       // Annotations that describe packages include : 'description' and 'parameters'
       // TODO -- should we check if annotation keys match description or parameters ?
         annotationParams = createKeyValueArrayFromFlag(flags.annotation)
       } else if (flags['annotation-file']) {
         annotationParams = createKeyValueArrayFromFile(flags['annotation-file'])
+      }
+      // Add feed annotation iff --feed
+      if (flags.feed) {
+        annotationParams.push({ key: 'feed', value: flags.feed })
       }
 
       // triggerParams.parameters is expected to be passed as an array of key value pairs
@@ -53,10 +57,27 @@ class TriggerCreate extends RuntimeBaseCommand {
 
       const ow = await this.wsk()
       await ow.triggers.create(options)
+      // invoke CREATE lifecycle iff --feed
+      if (flags.feed) {
+        const params = toDict(triggerPackage)
+        try {
+          await ow.feeds.create(Object.assign({ name: flags.feed, trigger: args.triggerName, params }))
+        } catch (err) {
+          ow.triggers.delete({ name: args.triggerName })
+          this.handleError('failed to execute feed creation lifecycle event')
+        }
+      }
     } catch (err) {
       this.handleError('failed to create the trigger', err)
     }
   }
+}
+
+function toDict (A) {
+  return A.reduce((M, kv) => {
+    M[kv.key] = kv.value
+    return M
+  }, {})
 }
 
 TriggerCreate.args = [
@@ -86,6 +107,10 @@ TriggerCreate.flags = {
   'annotation-file': flags.string({
     char: 'A',
     description: 'FILE containing annotation values in JSON format' // help description for flag
+  }),
+  feed: flags.string({
+    char: 'f',
+    description: 'trigger feed action name'
   })
 }
 
