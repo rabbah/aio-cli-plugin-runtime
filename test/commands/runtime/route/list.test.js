@@ -102,6 +102,22 @@ describe('instance methods', () => {
         })
     })
 
+    test('api list for action in default package', () => {
+      ow.mockResolvedFixture(owAction, 'route/list.json')
+      return command.run()
+        .then(() => {
+          expect(stdout.output).toMatchFixture('route/list-no-package.txt')
+        })
+    })
+
+    test('api list for action in a package', () => {
+      ow.mockResolvedFixture(owAction, 'route/list-package.json')
+      return command.run()
+        .then(() => {
+          expect(stdout.output).toMatchFixture('route/list-package.txt')
+        })
+    })
+
     test('error, throws exception', () => {
       return new Promise((resolve, reject) => {
         ow.mockRejected(owAction, new Error('an error'))
