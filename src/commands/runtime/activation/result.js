@@ -27,8 +27,8 @@ class ActivationResult extends RuntimeBaseCommand {
         this.error('missing required argument activationID')
       }
 
-      const result = await ow.activations.result(id)
-      this.logJSON('', result)
+      const response = await ow.activations.result(id)
+      this.logJSON('', response.result)
     } catch (err) {
       this.handleError('failed to fetch activation result', err)
     }
