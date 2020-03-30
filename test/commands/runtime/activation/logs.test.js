@@ -47,6 +47,17 @@ test('flags', async () => {
   expect(sFlag).toBeDefined()
   expect(sFlag.description).toBeDefined()
   expect(sFlag.char).toBe('r')
+
+  const cFlag = TheCommand.flags.count
+  expect(cFlag).toBeDefined()
+  expect(cFlag.description).toBeDefined()
+  expect(cFlag.char).toBe('c')
+  expect(cFlag.default).toBe(1)
+
+  const fFlag = TheCommand.flags.filter
+  expect(fFlag).toBeDefined()
+  expect(fFlag.description).toBeDefined()
+  expect(fFlag.char).toBe('f')
 })
 
 describe('instance methods', () => {
@@ -134,6 +145,19 @@ describe('instance methods', () => {
       return command.run()
         .then(() => {
           expect(listCmd).toHaveBeenCalledWith(expect.objectContaining({ limit: 2 }))
+          expect(logCmd).toHaveBeenCalledWith('12345')
+          expect(logCmd).toHaveBeenCalledWith('12346')
+          expect(stdout.output).toMatch('line3')
+        })
+    })
+
+    test('retrieve last -c logs with --filter', () => {
+      const listCmd = ow.mockResolved('activations.list', [{ activationId: '12345' }, { activationId: '12346' }])
+      const logCmd = ow.mockResolved(owAction, { logs: ['line1', 'line2', 'line3'] })
+      command.argv = ['-l', '-c', '2', '--filter', 'foo']
+      return command.run()
+        .then(() => {
+          expect(listCmd).toHaveBeenCalledWith(expect.objectContaining({ limit: 2, name: 'foo' }))
           expect(logCmd).toHaveBeenCalledWith('12345')
           expect(logCmd).toHaveBeenCalledWith('12346')
           expect(stdout.output).toMatch('line3')
