@@ -12,6 +12,7 @@ governing permissions and limitations under the License.
 
 const { flags } = require('@oclif/command')
 const RuntimeBaseCommand = require('../../../RuntimeBaseCommand')
+const ActivationListLimits = require('./list').limits
 const { printLogs } = require('../../../runtime-helpers')
 const chalk = require('chalk')
 
@@ -23,14 +24,12 @@ class ActivationLogs extends RuntimeBaseCommand {
     const ow = await this.wsk()
 
     if (flags.last) {
-      const limit = Math.max(1, Math.min(flags.count, 5))
-      activations = await ow.activations.list({ limit: limit, skip: 0 })
-      if (!activations || activations.length < 1) {
-        this.log('No activations to log.')
-        return
-      }
-    }
-    if (!activations[0].activationId) {
+      const name = flags.filter
+      const limit = Math.max(1, Math.min(flags.count, ActivationListLimits.max))
+      const options = { limit, skip: 0 }
+      if (name) options.name = name
+      activations = await ow.activations.list(options)
+    } else if (!args.activationId) {
       // just a thought, but we could just return --last activation log when no id is present
       this.error('Missing required arg: `activationId`')
     }
@@ -65,8 +64,12 @@ ActivationLogs.flags = {
   }),
   count: flags.integer({
     char: 'c',
-    description: 'used with --last, return the last `count` activation logs. Max 5',
+    description: `used with --last, return the last \`count\` activation logs (up to ${ActivationListLimits.max})`,
     default: 1
+  }),
+  filter: flags.string({
+    char: 'f',
+    description: 'the name of the activations to filter on (this flag may only be used with --last)'
   })
 }
 
