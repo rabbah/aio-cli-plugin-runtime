@@ -37,11 +37,14 @@ test('flags', async () => {
   expect(typeof TheCommand.flags.param).toBe('object')
   expect(TheCommand.flags['param-file'].char).toBe('P')
   expect(typeof TheCommand.flags['param-file']).toBe('object')
-  expect(TheCommand.flags.blocking.char).toBe('b')
-  expect(TheCommand.flags.blocking.default).toBe(false)
-  expect(typeof TheCommand.flags.blocking).toBe('object')
+  expect(TheCommand.flags.wait.char).toBe('w')
+  expect(TheCommand.flags.wait.default).toBe(false)
+  expect(TheCommand.flags['no-wait'].default).toBe(false)
+  expect(TheCommand.flags['no-wait'].char).toBe('n')
+  expect(typeof TheCommand.flags['no-wait']).toBe('object')
   expect(TheCommand.flags.result.char).toBe('r')
-  expect(TheCommand.flags.result.default).toBe(false)
+  expect(TheCommand.flags.result.default).toBe(true)
+  expect(TheCommand.flags.result.hidden).toBe(true)
   expect(typeof TheCommand.flags.result).toBe('object')
 })
 
@@ -75,7 +78,7 @@ describe('instance methods', () => {
       command.argv = ['hello']
       return command.run()
         .then(() => {
-          expect(cmd).toHaveBeenCalledWith({ name: 'hello', blocking: false, params: {}, result: false })
+          expect(cmd).toHaveBeenCalledWith({ name: 'hello', blocking: true, params: {}, result: true })
           expect(stdout.output).toMatch('')
         })
     })
@@ -88,8 +91,8 @@ describe('instance methods', () => {
           expect(cmd).toHaveBeenCalledWith({
             name: 'hello',
             params: { a: 'b', c: 'd' },
-            blocking: false,
-            result: false
+            blocking: true,
+            result: true
           })
           expect(stdout.output).toMatch('')
         })
@@ -97,7 +100,7 @@ describe('instance methods', () => {
 
     test('invokes an action with action name, params and blocking', () => {
       const cmd = ow.mockResolved(owAction, '')
-      command.argv = ['hello', '--param', 'a', 'b', '--param', 'c', 'd', '--blocking']
+      command.argv = ['hello', '--param', 'a', 'b', '--param', 'c', 'd', '--wait']
       return command.run()
         .then(() => {
           expect(cmd).toHaveBeenCalledWith({
@@ -128,7 +131,7 @@ describe('instance methods', () => {
     test('invokes an action with action name, and gets an activation id', () => {
       const result = { activationId: '123456' }
       const cmd = ow.mockResolved(owAction, result)
-      command.argv = ['hello']
+      command.argv = ['hello', '--no-wait']
       return command.run()
         .then(() => {
           expect(cmd).toHaveBeenCalledWith({
@@ -141,10 +144,10 @@ describe('instance methods', () => {
         })
     })
 
-    test('invokes an action with action name and --blocking, and gets an activation record as the response', () => {
+    test('invokes an action with action name and --wait, and gets an activation record as the response', () => {
       const result = { activationId: '123456', response: { result: { msg: '123456' } } }
       const cmd = ow.mockResolved(owAction, result)
-      command.argv = ['hello', '--blocking']
+      command.argv = ['hello', '--wait']
       return command.run()
         .then(() => {
           expect(cmd).toHaveBeenCalledWith({
@@ -173,11 +176,11 @@ describe('instance methods', () => {
         })
     })
 
-    test('invokes an action with action name and --blocking but activation is demoted to async', () => {
+    test('invokes an action with action name and --wait but activation is demoted to async', () => {
       // when the API returns with 202 it demoted the activation to async request, providing only an activation id
       const result = { activationId: '123456' }
       const cmd = ow.mockRejected(owAction, result)
-      command.argv = ['hello', '--blocking']
+      command.argv = ['hello', '--wait']
       return command.run()
         .then(() => {
           expect(cmd).toHaveBeenCalledWith({
@@ -209,12 +212,12 @@ describe('instance methods', () => {
         })
     })
 
-    test('invokes an action with action name and --blocking, and gets an activation record where the result is an error (API status code is 502)', () => {
+    test('invokes an action with action name and --wait, and gets an activation record where the result is an error (API status code is 502)', () => {
       // when the API returns with 502 due to an application error in the function
       // the result is the entire activation wrapped in an error object
       const result = { activationId: '123456', response: { result: { error: 'oops' } } }
       const cmd = ow.mockRejected(owAction, { error: result })
-      command.argv = ['hello', '--blocking']
+      command.argv = ['hello', '--wait']
       return command.run()
         .then(() => {
           expect(cmd).toHaveBeenCalledWith({
@@ -248,22 +251,37 @@ describe('instance methods', () => {
         })
     })
 
-    test('invokes an action with all flags', () => {
+    test('invokes an action with blocking and result flags', () => {
       const cmd = ow.mockResolved(owAction, '')
-      command.argv = ['hello', '--param', 'a', 'b', '--param', 'c', 'd', '--blocking', '--result']
+      command.argv = ['hello', '--param', 'a', 'b', '--param', 'c', 'd', '--wait', '--result']
       return command.run()
         .then(() => {
           expect(cmd).toHaveBeenCalledWith({
             name: 'hello',
             params: { a: 'b', c: 'd' },
             blocking: true,
-            result: true
+            result: false // when wait flag is set, it overrides
           })
           expect(stdout.output).toMatch('')
         })
     })
 
-    test('invokes an action with all flags and --param-file', () => {
+    test('invokes an action with blocking and result and async flags', () => {
+      const cmd = ow.mockResolved(owAction, '')
+      command.argv = ['hello', '--param', 'a', 'b', '--param', 'c', 'd', '--wait', '--result', '--no-wait']
+      return command.run()
+        .then(() => {
+          expect(cmd).toHaveBeenCalledWith({
+            name: 'hello',
+            params: { a: 'b', c: 'd' },
+            blocking: false, // when no-wait flag is set, it overrides
+            result: false // when no-wait flag is set, it overrides
+          })
+          expect(stdout.output).toMatch('')
+        })
+    })
+
+    test('invokes an action with blocking and result flags and --param-file', () => {
       const cmd = ow.mockResolved(owAction, '')
       const json = {
         'parameters.json': fixtureFile('trigger/parameters.json')
@@ -271,14 +289,14 @@ describe('instance methods', () => {
       fakeFileSystem.addJson({
         '/action': json
       })
-      command.argv = ['hello', '--param-file', '/action/parameters.json', '--blocking', '--result']
+      command.argv = ['hello', '--param-file', '/action/parameters.json', '--wait', '--result']
       return command.run()
         .then(() => {
           expect(cmd).toHaveBeenCalledWith({
             name: 'hello',
             params: { param1: 'param1value', param2: 'param2value' },
             blocking: true,
-            result: true
+            result: false // when wait flag is set, it overrides
           })
           expect(stdout.output).toMatch('')
         })
@@ -287,7 +305,7 @@ describe('instance methods', () => {
     test('tests for incorrect parameters', () => {
       return new Promise((resolve, reject) => {
         ow.mockRejected(owAction, '')
-        command.argv = ['hello', '--param', 'a', 'b', 'c', '--blocking']
+        command.argv = ['hello', '--param', 'a', 'b', 'c', '--wait']
         return command.run()
           .then(() => reject(new Error('does not throw error')))
           .catch(() => {
