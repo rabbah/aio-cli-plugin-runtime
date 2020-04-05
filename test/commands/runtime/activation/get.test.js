@@ -34,7 +34,7 @@ test('aliases', async () => {
 test('args', async () => {
   const getName = TheCommand.args[0]
   expect(getName.name).toBeDefined()
-  expect(getName.name).toEqual('activationID')
+  expect(getName.name).toEqual('activationId')
 })
 
 test('flags', async () => {
