@@ -1060,6 +1060,7 @@ function fileExtensionForKind (kind) {
       case 'ruby': return '.rb'
       case 'rust': return '.rs'
       case 'swift': return '.swift'
+      case 'typescript': return '.ts'
     }
   }
   return ''
@@ -1080,6 +1081,7 @@ function kindForFileExtension (filename) {
       case '.rb': return 'ruby:default'
       case '.rs': return 'rust:default'
       case '.swift': return 'swift:default'
+      case '.ts': return 'typescript:default'
     }
   }
   return undefined
