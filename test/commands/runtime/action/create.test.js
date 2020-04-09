@@ -517,7 +517,7 @@ describe('instance methods', () => {
     test('creates an action with action name, action path, --params flag, annotations and web flag as true', () => {
       const name = 'hello'
       const cmd = ow.mockResolved(owAction, '')
-      command.argv = [name, '/action/actionFile.js', '-p', 'a', 'b', '-p', 'c', 'd', '-a', 'desc', 'Description', '--web', 'true']
+      command.argv = [name, '/action/actionFile.js', '-p', 'a', 'b', '-p', 'c', 'd', '-a', 'desc', 'Description', '--web', 'true', '--web-secure', 'true']
       return command.run()
         .then(() => {
           expect(cmd).toHaveBeenCalledWith({
@@ -529,7 +529,70 @@ describe('instance methods', () => {
                 kind: 'nodejs:default'
               },
               parameters: createKeyValueArrayFromObject({ a: 'b', c: 'd' }),
-              annotations: createKeyValueArrayFromObject({ desc: 'Description', 'web-export': true })
+              annotations: createKeyValueArrayFromObject({ desc: 'Description', 'web-export': true, 'require-whisk-auth': true })
+            }
+          })
+          expect(stdout.output).toMatch('')
+        })
+    })
+
+    test('creates an action with action name with --web-secure true', () => {
+      const name = 'hello'
+      const cmd = ow.mockResolved(owAction, '')
+      command.argv = [name, '/action/actionFile.js', '--web', 'true', '--web-secure', 'true']
+      return command.run()
+        .then(() => {
+          expect(cmd).toHaveBeenCalledWith({
+            name,
+            action: {
+              name,
+              exec: {
+                code: jsFile,
+                kind: 'nodejs:default'
+              },
+              annotations: createKeyValueArrayFromObject({ 'web-export': true, 'require-whisk-auth': true })
+            }
+          })
+          expect(stdout.output).toMatch('')
+        })
+    })
+
+    test('creates an action with action name with --web-secure false', () => {
+      const name = 'hello'
+      const cmd = ow.mockResolved(owAction, '')
+      command.argv = [name, '/action/actionFile.js', '--web', 'true', '--web-secure', 'false']
+      return command.run()
+        .then(() => {
+          expect(cmd).toHaveBeenCalledWith({
+            name,
+            action: {
+              name,
+              exec: {
+                code: jsFile,
+                kind: 'nodejs:default'
+              },
+              annotations: createKeyValueArrayFromObject({ 'web-export': true, 'require-whisk-auth': false })
+            }
+          })
+          expect(stdout.output).toMatch('')
+        })
+    })
+
+    test('creates an action with action name with --web-secure abcxyz', () => {
+      const name = 'hello'
+      const cmd = ow.mockResolved(owAction, '')
+      command.argv = [name, '/action/actionFile.js', '--web', 'true', '--web-secure', 'abcxyz']
+      return command.run()
+        .then(() => {
+          expect(cmd).toHaveBeenCalledWith({
+            name,
+            action: {
+              name,
+              exec: {
+                code: jsFile,
+                kind: 'nodejs:default'
+              },
+              annotations: createKeyValueArrayFromObject({ 'web-export': true, 'require-whisk-auth': 'abcxyz' })
             }
           })
           expect(stdout.output).toMatch('')
