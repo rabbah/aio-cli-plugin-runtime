@@ -88,6 +88,16 @@ describe('instance methods', () => {
         })
     })
 
+    test('retrieve results for an activation --result', () => {
+      // note: when we call with an id, and --result, we never call `get`, just activations.result(id)
+      const cmd = ow.mockResolved('activations.result', { result: { msg: 'hello' } })
+      command.argv = ['12345', '--result']
+      return command.run()
+        .then(() => {
+          expect(cmd).toHaveBeenCalledWith('12345')
+        })
+    })
+
     test('retrieve last activation --last', () => {
       const axList = ow.mockResolved('activations.list', [{ activationId: '12345' }])
       const axGet = ow.mockResolved(owAction, '')
