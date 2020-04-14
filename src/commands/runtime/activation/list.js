@@ -14,7 +14,7 @@ const moment = require('dayjs')
 const RuntimeBaseCommand = require('../../../RuntimeBaseCommand')
 const { flags } = require('@oclif/command')
 const decorators = require('../../../decorators').decorators()
-const statusStrings = ['success', 'app error', `dev error`, 'sys error']
+const statusStrings = ['success', 'error', `error${decorators.collision}`, 'syserr']
 
 class ActivationList extends RuntimeBaseCommand {
   async run () {
