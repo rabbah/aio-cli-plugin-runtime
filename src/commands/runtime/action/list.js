@@ -46,14 +46,15 @@ class ActionList extends RuntimeBaseCommand {
             get: row => {
               const web = row.annotations.find(_ => _.key === 'web-export')
               const auth = row.annotations.find(_ => _.key === 'require-whisk-auth')
-              const note = web ? web.value === true ? 'web' : web.value : 'private'
-              if (auth && auth.value === true) {
+              if (web && web.value !== false) {
+                if (auth && auth.value === true) {
                   return `web \uD83D\uDD10`
-              } if (auth) {
+                } if (auth) {
                   return `web \uD83D\uDD10`
-              } else if (web) {
-                  return note
-              } else return note
+                } else {
+                  return 'web'
+                }
+              } else return 'private'
             }
           },
           details: {
