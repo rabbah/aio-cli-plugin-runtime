@@ -45,6 +45,7 @@ class ActivationList extends RuntimeBaseCommand {
       }
 
       const ow = await this.wsk()
+      const ns = (await ow.namespaces.list())[0]
 
       let listActivation
       if (Object.entries(options).length === 0) {
@@ -128,7 +129,8 @@ class ActivationList extends RuntimeBaseCommand {
               if (annotations && annotations.length) {
                 path = annotations.find(_ => _.key === 'path').value
               }
-              return path || `${row.namespace}/${row.name}`
+              path = path || `${row.namespace}/${row.name}`
+              return path.replace(`${ns}/`, '')
             }
           }
         }
