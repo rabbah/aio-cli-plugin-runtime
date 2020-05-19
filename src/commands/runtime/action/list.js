@@ -28,11 +28,15 @@ class ActionList extends RuntimeBaseCommand {
         options.namespace = namespace
         options.id = `${name}/`
       }
+
       const ow = await this.wsk()
+      const ns = (await ow.namespaces.list())[0]
       const result = await ow.actions.list(options)
+
       if (flags['name-sort'] || flags.name) {
         result.sort((a, b) => a.name.localeCompare(b.name))
       }
+
       if (flags.json) {
         this.logJSON('', result)
       } else if (flags.count) {
@@ -73,7 +77,10 @@ class ActionList extends RuntimeBaseCommand {
           actions: {
             header: 'Actions',
             minWidth: 50,
-            get: row => `/${row.namespace}/${row.name}`
+            get: row => {
+              const path = `${row.namespace}/${row.name}`
+              return path.replace(`${ns}/`, '')
+            }
           }
         }
         cli.table(result, columns)

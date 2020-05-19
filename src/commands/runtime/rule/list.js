@@ -66,7 +66,7 @@ class RuleList extends RuntimeBaseCommand {
             rules: {
               header: 'Rules',
               minWidth: 50,
-              get: row => `/${row.namespace}/${row.name}`
+              get: row => row.name
             }
           }
           cli.table(resultsWithStatus, columns)

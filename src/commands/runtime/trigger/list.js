@@ -82,7 +82,7 @@ class TriggerList extends RuntimeBaseCommand {
             triggers: {
               header: 'Trigger',
               minWidth: 50,
-              get: row => `/${row.namespace}/${row.name}`
+              get: row => row.name
             }
           }
           cli.table(resultsWithStatus, columns)
