@@ -47,7 +47,6 @@ class ActivationList extends RuntimeBaseCommand {
       }
 
       const ow = await this.wsk()
-      const ns = (await ow.namespaces.list())[0]
 
       let listActivation
       if (Object.entries(options).length === 0) {
@@ -70,6 +69,9 @@ class ActivationList extends RuntimeBaseCommand {
       if (flags.json) {
         this.logJSON('', listActivation)
       } else {
+        // determine the namespace to use in the activation table
+        const ns = (await ow.namespaces.list())[0]
+
         const columns = {
           Datetime: {
             get: row => moment(row.start).format('MM/DD HH:mm:ss'),
