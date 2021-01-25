@@ -74,7 +74,8 @@ describe('instance methods', () => {
       return command.run()
         .then(() => {
           expect(cmd).toHaveBeenCalledWith(expect.objectContaining({ limit: 1 }))
-          expect(stdout.output).toMatchFixture('action/list-output.txt')
+          const dates = JSON.parse(fixtureFile('action/list.json')).map(_ => _.updated)
+          expect(stdout.output).toMatch(fixtureFileWithTimeZoneAdjustment('action/list-output.txt', dates))
         })
     })
 
@@ -83,7 +84,8 @@ describe('instance methods', () => {
       return command.run()
         .then(() => {
           expect(cmd).toHaveBeenCalled()
-          expect(stdout.output).toMatchFixture('action/list-output.txt')
+          const dates = JSON.parse(fixtureFile('action/list.json')).map(_ => _.updated)
+          expect(stdout.output).toMatch(fixtureFileWithTimeZoneAdjustment('action/list-output.txt', dates))
         })
     })
 
@@ -92,7 +94,8 @@ describe('instance methods', () => {
       return command.run()
         .then(() => {
           expect(cmd).toHaveBeenCalled()
-          expect(stdout.output).toMatchFixture('action/list-output-3.txt')
+          const dates = JSON.parse(fixtureFile('action/list3.json')).map(_ => _.updated)
+          expect(stdout.output).toMatch(fixtureFileWithTimeZoneAdjustment('action/list-output-3.txt', dates))
         })
     })
 
@@ -104,7 +107,8 @@ describe('instance methods', () => {
         .then(() => {
           expect(rtUtils.parsePackageName).toHaveBeenCalledWith('somepackage')
           expect(cmd).toHaveBeenCalledWith(expect.objectContaining({ id: 'hola/' }))
-          expect(stdout.output).toMatchFixture('action/list-output.txt')
+          const dates = JSON.parse(fixtureFile('action/list.json')).map(_ => _.updated)
+          expect(stdout.output).toMatch(fixtureFileWithTimeZoneAdjustment('action/list-output.txt', dates))
         })
     })
 
@@ -116,7 +120,8 @@ describe('instance methods', () => {
         .then(() => {
           expect(rtUtils.parsePackageName).toHaveBeenCalledWith('somepackage')
           expect(cmd).toHaveBeenCalledWith(expect.objectContaining({ id: 'hola/', namespace: 'bonjour' }))
-          expect(stdout.output).toMatchFixture('action/list-output.txt')
+          const dates = JSON.parse(fixtureFile('action/list.json')).map(_ => _.updated)
+          expect(stdout.output).toMatch(fixtureFileWithTimeZoneAdjustment('action/list-output.txt', dates))
         })
     })
 
@@ -128,7 +133,8 @@ describe('instance methods', () => {
       return command.run()
         .then(() => {
           expect(cmd).toHaveBeenCalled()
-          expect(stdout.output).toMatchFixture('action/list-output-2.txt')
+          const dates = JSON.parse(fixtureFile('action/list2.json')).map(_ => _.updated)
+          expect(stdout.output).toMatch(fixtureFileWithTimeZoneAdjustment('action/list-output-2.txt', dates))
         })
     })
 
@@ -182,7 +188,8 @@ describe('instance methods', () => {
       return command.run()
         .then(() => {
           expect(cmd).toHaveBeenCalled()
-          expect(stdout.output).toMatchFixture('action/list-name-sort-output.txt')
+          const dates = JSON.parse(fixtureFile('action/list-name-sort.json')).map(_ => _.updated)
+          expect(stdout.output).toMatch(fixtureFileWithTimeZoneAdjustment('action/list-name-sort-output.txt', dates))
         })
     })
 

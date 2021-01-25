@@ -57,6 +57,7 @@ test('flags', async () => {
 })
 
 describe('instance methods', () => {
+  const triggerDate = 1606487719405
   let command, handleError, rtLib
   beforeEach(async () => {
     command = new TheCommand([])
@@ -79,7 +80,7 @@ describe('instance methods', () => {
             status: name === 'trigger1' ? 'active' : 'inactive'
           }
         },
-        updated: 1606487704620,
+        updated: triggerDate,
         version: '0.0.1'
       }
       if (name === 'trigger1') {
@@ -138,7 +139,7 @@ describe('instance methods', () => {
           const cmdArg0 = cmd.mock.calls[0][0]
           expect(cmdArg0).toHaveProperty('limit', 30)
           expect(cmdArg0).not.toHaveProperty('skip')
-          expect(stdout.output).toMatchFixture('trigger/list.txt')
+          expect(stdout.output).toMatch(fixtureFileWithTimeZoneAdjustment('trigger/list.txt', triggerDate))
         })
     })
 
@@ -178,7 +179,7 @@ describe('instance methods', () => {
                 status: 'active'
               }
             },
-            updated: 1606487704620,
+            updated: triggerDate,
             version: '0.0.1'
           },
           {
@@ -197,7 +198,7 @@ describe('instance methods', () => {
                 status: 'inactive'
               }
             },
-            updated: 1606487704620,
+            updated: triggerDate,
             version: '0.0.1'
           }
           ])
@@ -222,7 +223,7 @@ describe('instance methods', () => {
       return command.run()
         .then(() => {
           expect(cmd).toHaveBeenCalled()
-          expect(stdout.output).toMatchFixture('trigger/list-name-sort-output.txt')
+          expect(stdout.output).toMatch(fixtureFileWithTimeZoneAdjustment('trigger/list-name-sort-output.txt', triggerDate))
         })
     })
 

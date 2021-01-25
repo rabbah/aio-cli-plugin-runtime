@@ -152,7 +152,7 @@ describe('instance methods', () => {
       rtLib.mockResolved(rtAction, data)
       return command.run()
         .then(() => {
-          expect(stdout.output).toMatchFixture('activation/list-activation-cold-output.txt')
+          expect(stdout.output).toMatch(fixtureFileWithTimeZoneAdjustment('activation/list-activation-cold-output.txt', data[0].start))
         })
     })
 
@@ -175,7 +175,7 @@ describe('instance methods', () => {
       rtLib.mockResolved(rtAction, data)
       return command.run()
         .then(() => {
-          expect(stdout.output).toMatchFixture('activation/list-activation-warm-output.txt')
+          expect(stdout.output).toMatch(fixtureFileWithTimeZoneAdjustment('activation/list-activation-warm-output.txt', data[0].start))
         })
     })
 
@@ -198,7 +198,7 @@ describe('instance methods', () => {
       rtLib.mockResolved(rtAction, data)
       return command.run()
         .then(() => {
-          expect(stdout.output).toMatchFixture('activation/list-activation-topmost-output.txt')
+          expect(stdout.output).toMatch(fixtureFileWithTimeZoneAdjustment('activation/list-activation-topmost-output.txt', data[0].start))
         })
     })
 
@@ -221,7 +221,7 @@ describe('instance methods', () => {
       rtLib.mockResolved(rtAction, data)
       return command.run()
         .then(() => {
-          expect(stdout.output).toMatchFixture('activation/list-activation-sequence-output.txt')
+          expect(stdout.output).toMatch(fixtureFileWithTimeZoneAdjustment('activation/list-activation-sequence-output.txt', data[0].start))
         })
     })
 
@@ -256,28 +256,24 @@ describe('instance methods', () => {
       rtLib.mockResolved(rtAction, data)
       return command.run()
         .then(() => {
-          expect(stdout.output).toMatchFixture('activation/list-activation-timeout-output.txt')
+          expect(stdout.output).toMatch(fixtureFileWithTimeZoneAdjustment('activation/list-activation-timeout-output.txt', data[0].start))
         })
     })
 
     test('return list of trigger activations', () => {
-      const date = 1606487719405
       const data = [
         {
           activationId: 'a5e7fdaeaa2e4384a7fdaeaa2e438442',
           name: 'trigger',
           namespace: '8888_9999',
-          start: date,
+          start: 1606487719405,
           statusCode: 0,
           version: '0.0.1'
         }]
       rtLib.mockResolved(rtAction, data)
       return command.run()
         .then(() => {
-          const expDate = new Date(date)
-          let expOutput = fixtureFile('activation/list-triggers-output.txt')
-          expOutput = expOutput.replace('11/27/2020, 9:35:19 AM', expDate.toLocaleString())
-          expect(stdout.output).toMatch(expOutput)
+          expect(stdout.output).toMatch(fixtureFileWithTimeZoneAdjustment('activation/list-triggers-output.txt', data[0].start))
         })
     })
 

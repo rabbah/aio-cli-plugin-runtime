@@ -140,7 +140,8 @@ describe('instance methods', () => {
       return command.run()
         .then(() => {
           expect(cmd).toHaveBeenCalled()
-          expect(stdout.output).toMatchFixture('package/list-name-sort-output.txt')
+          const dates = JSON.parse(fixtureFile('package/list.json')).map(_ => _.updated)
+          expect(stdout.output).toMatch(fixtureFileWithTimeZoneAdjustment('package/list-name-sort-output.txt', dates))
         })
     })
 

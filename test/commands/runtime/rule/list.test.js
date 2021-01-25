@@ -110,7 +110,8 @@ describe('instance methods', () => {
         .then(() => {
           expect(cmd).toHaveBeenCalledWith(expect.objectContaining({ limit: 2 }))
           expect(cmd2).toHaveBeenCalled()
-          expect(stdout.output.replace(/\s/g, '')).toMatchFixture('rule/list-output.txt')
+          const dates = JSON.parse(fixtureFile('rule/list.json')).map(_ => _.updated)
+          expect(stdout.output).toMatch(fixtureFileWithTimeZoneAdjustment('rule/list-output.txt', dates))
         })
     })
 
@@ -122,7 +123,8 @@ describe('instance methods', () => {
         .then(() => {
           expect(cmd).toHaveBeenCalledWith(expect.objectContaining({ limit: 2 }))
           expect(cmd2).toHaveBeenCalled()
-          expect(stdout.output.replace(/\s/g, '')).toMatchFixture('rule/list-output-public.txt')
+          const dates = JSON.parse(fixtureFile('rule/list.json')).map(_ => _.updated)
+          expect(stdout.output).toMatch(fixtureFileWithTimeZoneAdjustment('rule/list-output.txt', dates))
         })
     })
 
@@ -144,7 +146,8 @@ describe('instance methods', () => {
       return command.run()
         .then(() => {
           expect(cmd).toHaveBeenCalled()
-          expect(stdout.output).toMatchFixture('rule/list-name-sort-output.txt')
+          const dates = JSON.parse(fixtureFile('rule/get-name-sort.json')).map(_ => _.updated)
+          expect(stdout.output).toMatch(fixtureFileWithTimeZoneAdjustment('rule/list-name-sort-output.txt', dates))
         })
     })
 
