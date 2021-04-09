@@ -84,7 +84,7 @@ describe('instance methods', () => {
       return command.run()
         .then(() => {
           expect(cmd).toHaveBeenCalledWith(expect.objectContaining({
-            name: 'hello',
+            name: '/_/hello',
             blocking: true,
             params: {},
             result: true
@@ -126,7 +126,7 @@ describe('instance methods', () => {
         .then(() => {
           expect(rtUtils.getKeyValueObjectFromMergedParameters).toHaveBeenCalledWith(['a', 'b', 'c', 'd'], undefined)
           expect(cmd).toHaveBeenCalledWith(expect.objectContaining({
-            name: 'hello',
+            name: '/_/hello',
             params: { a: 'b', c: 'd' },
             blocking: true,
             result: true
@@ -143,7 +143,7 @@ describe('instance methods', () => {
         .then(() => {
           expect(rtUtils.getKeyValueObjectFromMergedParameters).toHaveBeenCalledWith(['a', 'b', 'c', 'd'], undefined)
           expect(cmd).toHaveBeenCalledWith(expect.objectContaining({
-            name: 'hello',
+            name: '/_/hello',
             params: { a: 'b', c: 'd' },
             blocking: true,
             result: false
@@ -159,7 +159,7 @@ describe('instance methods', () => {
       return command.run()
         .then(() => {
           expect(cmd).toHaveBeenCalledWith(expect.objectContaining({
-            name: 'hello',
+            name: '/_/hello',
             blocking: true,
             params: {},
             result: true
@@ -176,7 +176,7 @@ describe('instance methods', () => {
       return command.run()
         .then(() => {
           expect(cmd).toHaveBeenCalledWith(expect.objectContaining({
-            name: 'hello',
+            name: '/_/hello',
             blocking: false,
             params: {},
             result: false
@@ -193,7 +193,7 @@ describe('instance methods', () => {
       return command.run()
         .then(() => {
           expect(cmd).toHaveBeenCalledWith(expect.objectContaining({
-            name: 'hello',
+            name: '/_/hello',
             blocking: true,
             params: {},
             result: false
@@ -210,7 +210,7 @@ describe('instance methods', () => {
       return command.run()
         .then(() => {
           expect(cmd).toHaveBeenCalledWith(expect.objectContaining({
-            name: 'hello',
+            name: '/_/hello',
             blocking: true,
             params: {},
             result: true
@@ -228,7 +228,7 @@ describe('instance methods', () => {
       return command.run()
         .then(() => {
           expect(cmd).toHaveBeenCalledWith(expect.objectContaining({
-            name: 'hello',
+            name: '/_/hello',
             blocking: true,
             params: {},
             result: false
@@ -247,7 +247,7 @@ describe('instance methods', () => {
       return command.run()
         .then(() => {
           expect(cmd).toHaveBeenCalledWith(expect.objectContaining({
-            name: 'hello',
+            name: '/_/hello',
             blocking: true,
             params: {},
             result: true
@@ -267,7 +267,7 @@ describe('instance methods', () => {
       return command.run()
         .then(() => {
           expect(cmd).toHaveBeenCalledWith(expect.objectContaining({
-            name: 'hello',
+            name: '/_/hello',
             blocking: true,
             params: {},
             result: false
@@ -288,7 +288,7 @@ describe('instance methods', () => {
       return command.run()
         .then(() => {
           expect(cmd).toHaveBeenCalledWith(expect.objectContaining({
-            name: 'hello',
+            name: '/_/hello',
             blocking: true,
             params: {},
             result: true
@@ -306,7 +306,7 @@ describe('instance methods', () => {
         .then(() => {
           expect(rtUtils.getKeyValueObjectFromMergedParameters).toHaveBeenCalledWith(['a', 'b', 'c', 'd'], undefined)
           expect(cmd).toHaveBeenCalledWith(expect.objectContaining({
-            name: 'hello',
+            name: '/_/hello',
             params: { a: 'b', c: 'd' },
             blocking: true,
             result: false, // when full flag is set, it overrides
@@ -323,7 +323,7 @@ describe('instance methods', () => {
       return command.run()
         .then(() => {
           expect(cmd).toHaveBeenCalledWith({
-            name: 'hello',
+            name: '/_/hello',
             params: { a: 'b', c: 'd' },
             blocking: false, // when no-wait flag is set, it overrides
             result: false, // when no-wait flag is set, it overrides
@@ -341,7 +341,7 @@ describe('instance methods', () => {
         .then(() => {
           expect(rtUtils.getKeyValueObjectFromMergedParameters).toHaveBeenCalledWith(undefined, '/action/parameters.json')
           expect(cmd).toHaveBeenCalledWith(expect.objectContaining({
-            name: 'hello',
+            name: '/_/hello',
             params: { fakeParam: 'aaa' },
             blocking: true,
             result: false // when full flag is set, it overrides

@@ -16,6 +16,7 @@ const RuntimeBaseCommand = require('../../../RuntimeBaseCommand')
 const { createComponentsfromSequence, getKeyValueArrayFromMergedParameters } = require('@adobe/aio-lib-runtime').utils
 const { kindForFileExtension } = require('../../../kinds')
 const { flags } = require('@oclif/command')
+const fqn = require('openwhisk-fqn')
 
 class ActionCreate extends RuntimeBaseCommand {
   isUpdate () { return false }
@@ -23,6 +24,7 @@ class ActionCreate extends RuntimeBaseCommand {
   async run () {
     const { args, flags } = this.parse(ActionCreate)
     let name = args.actionName
+
     let exec
     let paramsAction
     let envParams
@@ -188,6 +190,7 @@ class ActionCreate extends RuntimeBaseCommand {
         limits.memory = flags.memory
       }
 
+      name = fqn(name)
       const options = { name }
       if (exec) options.exec = exec
       if (limits) options.limits = limits
