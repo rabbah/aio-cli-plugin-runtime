@@ -13,11 +13,12 @@ governing permissions and limitations under the License.
 const RuntimeBaseCommand = require('../../../RuntimeBaseCommand')
 const { flags } = require('@oclif/command')
 const { getKeyValueObjectFromMergedParameters } = require('@adobe/aio-lib-runtime').utils
+const fqn = require('openwhisk-fqn')
 
 class ActionInvoke extends RuntimeBaseCommand {
   async run () {
     const { args, flags } = this.parse(ActionInvoke)
-    const name = args.actionName
+    const name = fqn(args.actionName)
     const nowait = flags['no-wait']
     const blocking = nowait === false
     const result = flags.result === true && flags.full === false && nowait === false

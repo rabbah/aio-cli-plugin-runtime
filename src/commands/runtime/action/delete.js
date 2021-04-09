@@ -12,11 +12,12 @@ governing permissions and limitations under the License.
 
 const RuntimeBaseCommand = require('../../../RuntimeBaseCommand')
 const { flags } = require('@oclif/command')
+const fqn = require('openwhisk-fqn')
 
 class ActionDelete extends RuntimeBaseCommand {
   async run () {
     const { flags, args } = this.parse(ActionDelete)
-    const name = args.actionName
+    const name = fqn(args.actionName)
     try {
       const ow = await this.wsk()
       const result = await ow.actions.delete(name)

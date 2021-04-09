@@ -59,7 +59,7 @@ describe('instance methods', () => {
       command.argv = ['hello']
       return command.run()
         .then(() => {
-          expect(cmd).toHaveBeenCalledWith('hello')
+          expect(cmd).toHaveBeenCalledWith('/_/hello')
           expect(stdout.output).toMatch('')
         })
     })
@@ -69,7 +69,7 @@ describe('instance methods', () => {
       command.argv = ['hello', '--json']
       return command.run()
         .then(() => {
-          expect(cmd).toHaveBeenCalledWith('hello')
+          expect(cmd).toHaveBeenCalledWith('/_/hello')
           expect(JSON.parse(stdout.output)).toEqual(expect.any(Object))
         })
     })
