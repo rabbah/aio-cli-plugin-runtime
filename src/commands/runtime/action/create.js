@@ -15,13 +15,14 @@ const RuntimeBaseCommand = require('../../../RuntimeBaseCommand')
 const { createKeyValueArrayFromFlag, createKeyValueArrayFromFile, createComponentsfromSequence, getKeyValueArrayFromMergedParameters } = require('@adobe/aio-lib-runtime').utils
 const { kindForFileExtension } = require('../../../kinds')
 const { flags } = require('@oclif/command')
+const fqn = require('openwhisk-fqn')
 
 class ActionCreate extends RuntimeBaseCommand {
   isUpdate () { return false }
 
   async run () {
     const { args, flags } = this.parse(ActionCreate)
-    const name = args.actionName
+    const name = fqn(args.actionName)
     let exec
     let paramsAction
     let envParams

@@ -14,11 +14,12 @@ const fs = require('fs')
 const RuntimeBaseCommand = require('../../../RuntimeBaseCommand')
 const { fileExtensionForKind } = require('../../../kinds')
 const { flags } = require('@oclif/command')
+const fqn = require('openwhisk-fqn')
 
 class ActionGet extends RuntimeBaseCommand {
   async run () {
     const { args, flags } = this.parse(ActionGet)
-    const name = args.actionName
+    const name = fqn(args.actionName)
     const ow = await this.wsk()
 
     try {
