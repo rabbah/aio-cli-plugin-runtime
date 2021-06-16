@@ -329,7 +329,7 @@ USAGE
 OPTIONS
   -c, --count              show only the total number of actions
   -i, --insecure           bypass certificate check
-  -l, --limit=limit        only return LIMIT number of actions from the collection (default 30)
+  -l, --limit=limit        only return LIMIT number of actions
   -n, --name               sort results by name
   -s, --skip=skip          exclude the first SKIP number of actions from the result
   -u, --auth=auth          whisk auth
@@ -500,28 +500,16 @@ OPTIONS
   -c, --count              show only the total number of activations
   -f, --full               include full activation description
   -i, --insecure           bypass certificate check
-
-  -l, --limit=limit        only return LIMIT number of activations from the collection with a maximum LIMIT of 200
-                           activations (default 30)
-
+  -l, --limit=limit        only return LIMIT number of activations
   -s, --skip=skip          exclude the first SKIP number of activations from the result
-
   -u, --auth=auth          whisk auth
-
   -v, --verbose            Verbose output
-
   --apihost=apihost        whisk API host
-
   --apiversion=apiversion  whisk API version
-
   --cert=cert              client cert
-
   --debug=debug            Debug level output
-
   --help                   Show help
-
   --json                   output raw json
-
   --key=key                client key
 
   --since=since            return activations with timestamps later than SINCE; measured in milliseconds since Th, 01,
@@ -1066,7 +1054,7 @@ USAGE
 OPTIONS
   -c, --count              show only the total number of packages
   -i, --insecure           bypass certificate check
-  -l, --limit=limit        only return LIMIT number of packages from the collection (default 30)
+  -l, --limit=limit        only return LIMIT number of packages
   -n, --name               sort results by name
   -s, --skip=skip          exclude the first SKIP number of packages from the result
   -u, --auth=auth          whisk auth
@@ -1421,7 +1409,7 @@ ARGUMENTS
 
 OPTIONS
   -i, --insecure     bypass certificate check
-  -l, --limit=limit  [default: 30] only return LIMIT number of triggers from the collection (default 30)
+  -l, --limit=limit  only return LIMIT number of triggers
   -s, --skip=skip    exclude the first SKIP number of triggers from the result
   -u, --auth         whisk auth
   -v, --verbose      Verbose output
@@ -1646,7 +1634,7 @@ USAGE
 OPTIONS
   -c, --count        show only the total number of rules
   -i, --insecure     bypass certificate check
-  -l, --limit=limit  [default: 30] Limit number of rules returned. Default 30
+  -l, --limit=limit  Limit number of rules returned
   -n, --name         sort results by name
   -s, --skip=skip    Skip number of rules returned
   -u, --auth         whisk auth
@@ -1906,7 +1894,7 @@ USAGE
 OPTIONS
   -c, --count        show only the total number of triggers
   -i, --insecure     bypass certificate check
-  -l, --limit=limit  [default: 30] only return LIMIT number of triggers from the collection (default 30)
+  -l, --limit=limit  only return LIMIT number of triggers
   -n, --name         sort results by name
   -s, --skip=skip    exclude the first SKIP number of triggers from the result
   -u, --auth         whisk auth
